@@ -2,18 +2,17 @@ require 'rails_helper'
 
 RSpec.describe 'Home', type: :system do
   before do
-    driven_by :rack_test
+    driven_by(:rack_test)
   end
 
-  describe 'トップページアクセスの検証' do
-    it 'Home#top という文字列が表示される' do
+  describe 'トップページの検証' do
+    it 'Home#topという文字列が表示される' do
       visit '/'
 
       expect(page).to have_content('Home#top')
     end
   end
 
-  ####### ここから追加 #######
   describe 'ナビゲーションバーの検証' do
     context 'ログインしていない場合' do
       before { visit '/' }
@@ -24,6 +23,10 @@ RSpec.describe 'Home', type: :system do
 
       it 'ログインリンクを表示する' do
         expect(page).to have_link('ログイン', href: '/users/sign_in')
+      end
+
+      it 'ログ投稿リンクを表示しない' do # 追加
+        expect(page).not_to have_link('ログ投稿', href: '/posts/new')
       end
 
       it 'ログアウトリンクは表示しない' do
@@ -46,6 +49,10 @@ RSpec.describe 'Home', type: :system do
         expect(page).not_to have_link('ログイン', href: '/users/sign_in')
       end
 
+      it 'ログ投稿リンクを表示する' do # 追加
+        expect(page).to have_link('ログ投稿', href: '/posts/new')
+      end
+
       it 'ログアウトリンクを表示する' do
         expect(page).to have_content('ログアウト')
       end
@@ -56,7 +63,7 @@ RSpec.describe 'Home', type: :system do
         # ログインしていない状態のリンク表示パターンになることを確認
         expect(page).to have_link('ユーザー登録', href: '/users/sign_up')
         expect(page).to have_link('ログイン', href: '/users/sign_in')
-        expect(page).not_to have_button('ログアウト') # 修正
+        expect(page).not_to have_button('ログアウト')
       end
     end
   end
